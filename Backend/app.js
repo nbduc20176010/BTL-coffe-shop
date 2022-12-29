@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const userRouter = require("./routers/user");
 const authRouter = require("./routers/auth");
 const productRouter = require("./routers/product");
+const tableRouter = require("./routers/table");
 const orderRouter = require("./routers/order");
 
 mongoose
@@ -24,6 +25,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use("/api/user", userRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/table", tableRouter);
 app.use("/api/product", productRouter);
 app.use("/api/auth", authRouter);
 
