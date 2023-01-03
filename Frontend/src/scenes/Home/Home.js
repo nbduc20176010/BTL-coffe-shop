@@ -1,6 +1,6 @@
 import { Breadcrumb, Col, Row } from "antd";
 import React from "react";
-import OrderMenu from "../../components/OrderMenu";
+import OrderMenu from "../../components/OrderMenu/OrderMenu";
 import Table from "../../components/Table";
 
 
@@ -8,35 +8,51 @@ const Home = () => {
     const tables = [
         {
             number: 1,
-            status: "active",
+            numOfSits: 4,
+            status: "empty",
+            order: []
         },
         {
             number: 2,
-            status: "active",
+            numOfSits: 4,
+            status: "empty",
+            order: []
         },
         {
             number: 3,
-            status: "active",
+            numOfSits: 4,
+            status: "empty",
+            order: []
         },
         {
             number: 4,
-            status: "active",
+            numOfSits: 4,
+            status: "empty",
+            order: []
         },
         {
             number: 5,
-            status: "active",
+            numOfSits: 4,
+            status: "empty",
+            order: []
         },
         {
             number: 6,
-            status: "active",
+            numOfSits: 4,
+            status: "empty",
+            order: []
         },
         {
             number: 7,
-            status: "active",
+            numOfSits: 4,
+            status: "empty",
+            order: []
         },
         {
             number: 8,
-            status: "active",
+            numOfSits: 4,
+            status: "empty",
+            order: []
         },
     ];
     return (
@@ -45,7 +61,7 @@ const Home = () => {
                 <Breadcrumb.Item>Home</Breadcrumb.Item>
                 <Breadcrumb.Item>Tables</Breadcrumb.Item>
             </Breadcrumb>
-            <div style={{ margin: "50px" }}>
+            <div style={{ padding: "50px" }}>
                 <Row gutter={[32, 32]}>
                     {tables.map((item) => (
                         <Col span={8} key={`${item.number} + "col"`}>
