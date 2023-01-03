@@ -17,7 +17,7 @@ router.post("/", verifyTokenAndAuthorization, async (req, res) => {
   }
 });
 
-//update product
+//update order
 router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
     const updatedOrder = await Order.findByIdAndUpdate(
@@ -33,7 +33,7 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-//delete product
+//delete order
 router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
   try {
     await Order.findByIdAndDelete(req.params.id);
