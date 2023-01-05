@@ -3,7 +3,7 @@ const User = require("../models/User");
 
 
 //update user
-router.put("/:id",  async (req, res) => {
+router.put("/:id", async (req, res) => {
   if (req.body.password) {
     req.body.password = CryptoJS.AES.encrypt(
       req.body.password,
@@ -25,7 +25,7 @@ router.put("/:id",  async (req, res) => {
 });
 
 //delete user
-router.delete("/:id",  async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     res.json("user has been deleted");
@@ -35,7 +35,7 @@ router.delete("/:id",  async (req, res) => {
 });
 
 //get all users
-router.get("/",  async (req, res) => {
+router.get("/", async (req, res) => {
   let page = req.query.page;
   let size = req.query.size;
   try {
@@ -49,7 +49,7 @@ router.get("/",  async (req, res) => {
 });
 
 //get user by id
-router.get("/:id",  async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     const { password, ...others } = user._doc;
