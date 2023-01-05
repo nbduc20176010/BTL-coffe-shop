@@ -1,13 +1,9 @@
 const router = require("express").Router();
 const User = require("../models/User");
-const {
-  verifyToken,
-  verifyTokenAndAuthorization,
-  verifyTokenAndAdmin,
-} = require("./verifyToken");
+
 
 //update user
-router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
+router.put("/:id",  async (req, res) => {
   if (req.body.password) {
     req.body.password = CryptoJS.AES.encrypt(
       req.body.password,
@@ -29,7 +25,7 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 //delete user
-router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
+router.delete("/:id",  async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     res.json("user has been deleted");
@@ -39,7 +35,7 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 //get all users
-router.get("/", verifyTokenAndAdmin, async (req, res) => {
+router.get("/",  async (req, res) => {
   let page = req.query.page;
   let size = req.query.size;
   try {
@@ -53,7 +49,7 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //get user by id
-router.get("/:id", verifyTokenAndAuthorization, async (req, res) => {
+router.get("/:id",  async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     const { password, ...others } = user._doc;
