@@ -5,7 +5,8 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const bodyParser = require("body-parser");
 const userRouter = require("./routers/user");
-const productRouter = require("./routers/drink");
+const drinkRouter = require("./routers/drink");
+const storeRouter = require("./routers/store");
 const tableRouter = require("./routers/table");
 const orderRouter = require("./routers/order");
 
@@ -24,7 +25,8 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use("/api/user", userRouter);
 app.use("/api/order", orderRouter);
-app.use("/api/product", productRouter);
+app.use("/api/drink", drinkRouter);
+app.use("/api/store", storeRouter);
 app.use("/api/table", tableRouter)
 app.listen(process.env.PORT || 5000, () => {
     console.log("app running");
