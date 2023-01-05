@@ -1,25 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+import { Layout } from "antd";
+import { Route, Routes } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import OrderMenu from "./components/OrderMenu/OrderMenu";
+import Home from "./scenes/Home/Home";
+import Login from "./scenes/Login/Login";
+import Missing from "./scenes/Missing";
 
+const { Header, Content } = Layout;
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const routers = [
+        {
+            key: "home_route",
+            path: "/",
+            element: <Home />,
+        },
+        {
+            key: "login_route",
+            path: "/login",
+            element: <Login />,
+        },
+        {
+            key: "missing_route",
+            path: "/*",
+            element: <Missing />,
+        },
+    ];
+
+    return (
+        <>
+            <Layout
+                style={{
+                    minHeight: "100vh",
+                }}
+            >
+                <Header>
+                    <Navbar />
+                </Header>
+                <Content
+                    style={{
+                        padding: "10px 50px 10px",
+                        position: "relative",
+                    }}
+                >
+                    <Routes>
+                        {routers.map((item) => (
+                            <Route
+                                key={item.key}
+                                path={item.path}
+                                element={item.element}
+                            />
+                        ))}
+                    </Routes>
+                </Content>
+            </Layout>
+            <OrderMenu />
+        </>
+    );
 }
 
 export default App;
