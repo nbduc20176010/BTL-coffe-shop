@@ -26,7 +26,7 @@ const tableSchema = new mongoose.Schema(
         },
         empty: {
             type: Boolean,
-            default: false,
+            default: true,
         },
     },
     {

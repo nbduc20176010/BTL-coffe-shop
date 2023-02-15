@@ -16,7 +16,6 @@ export const getStoreTables = createAsyncThunk(
 export const submitOrder = createAsyncThunk(
     "/table/submitOrder",
     async (input) => {
-        console.log(input);
         const res = await api.put(`/table/${input.id}`, input.order);
         return res.data;
     }

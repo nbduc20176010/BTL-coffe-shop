@@ -13,6 +13,7 @@ const OrderMenu = () => {
     const currentSelectTable = useSelector(
         (state) => state.common.currentSelectTable
     );
+    const tables = useSelector((state) => state.tables.tables);
     const [order, setOrder] = useState();
     const [reload, setReload] = useState(true);
     const [currentOrder, setCurrentOrder] = useState({ total: 0, drinks: [] });
@@ -27,6 +28,7 @@ const OrderMenu = () => {
             quantity: 0,
         }));
         setOrder(neworder);
+        setCurrentOrder({ total: 0, drinks: [] });
     };
 
     const selectDrink = (drink) => {
@@ -57,6 +59,15 @@ const OrderMenu = () => {
             setOrder(neworder);
         }
     }, [menu.drinks]);
+
+    useEffect(() => {
+        if (orderMenuVisible) {
+            let currentTable = tables.find(
+                (item) => item._id === currentSelectTable
+            );
+            setCurrentOrder(currentTable.order);
+        }
+    }, [currentSelectTable, orderMenuVisible, tables]);
 
     return (
         <>
