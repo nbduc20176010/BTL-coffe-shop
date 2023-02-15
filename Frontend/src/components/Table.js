@@ -1,13 +1,29 @@
-import { Button } from "antd";
+import { Button, Popconfirm, Popover, Space } from "antd";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { triggerOrderMenu } from "../features/commonSlice";
+import { clearTable } from "../features/tableSlice";
 
-const Table = ({ number, status }) => {
+const Table = ({ _id, order, tableNumber, numberOfSit, empty }) => {
     const dispatch = useDispatch();
     const openOrderMenu = () => {
-        dispatch(triggerOrderMenu());
+        dispatch(triggerOrderMenu(_id));
     };
+    const clearTableDrinks = () => {
+        dispatch(clearTable(_id));
+    };
+    const tableDrinks = (
+        <div key={_id}>
+            <p>Total : {order.total}</p>
+            {order.drinks &&
+                order.drinks.map((item) => (
+                    <p key={item.name}>
+                        {item.name} - {item.price}
+                    </p>
+                ))}
+        </div>
+    );
+
     return (
         <div
             style={{
@@ -20,11 +36,25 @@ const Table = ({ number, status }) => {
                 alignItems: "center",
             }}
         >
-            <p>Table : {number}</p>
-            <p>status : {status}</p>
-            <Button type="primary" onClick={openOrderMenu}>
-                Order
-            </Button>
+            <p>Table : {tableNumber}</p>
+            <p>Number of sits : {numberOfSit}</p>
+            <p>status : {empty ? "empty" : "currently use"}</p>
+            <Space>
+                <Popover content={tableDrinks} title="Current order">
+                    <Button>Detail</Button>
+                </Popover>
+                <Button type="primary" onClick={openOrderMenu}>
+                    Order
+                </Button>
+                <Popconfirm
+                    title="clear table"
+                    okText="OK"
+                    cancelText="Cancel"
+                    onConfirm={clearTableDrinks}
+                >
+                    <Button danger>Clear table</Button>
+                </Popconfirm>
+            </Space>
         </div>
     );
 };

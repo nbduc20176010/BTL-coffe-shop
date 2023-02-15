@@ -1,6 +1,6 @@
 const router = require("express").Router();
+const Store = require("../models/Store");
 const Table = require("../models/Table");
-
 
 //create Table
 router.post("/", async (req, res) => {
@@ -19,7 +19,36 @@ router.put("/:id", async (req, res) => {
         const updatedTable = await Table.findByIdAndUpdate(
             req.params.id,
             {
-                $set: req.body,
+                $set: {
+                    order: req.body,
+                    empty: false,
+                },
+            },
+            { new: true }
+        );
+        res.json(updatedTable);
+    } catch (err) {
+        res.json(err);
+    }
+});
+
+//clear table
+router.put("/clear/:id", async (req, res) => {
+    try {
+        const currentTable = await Table.findById(req.params.id);
+        const updateStoreIncome = await Store.findById(currentTable.storeId);
+        updateStoreIncome.income += currentTable.order.total;
+        updateStoreIncome.save();
+        const updatedTable = await Table.findByIdAndUpdate(
+            req.params.id,
+            {
+                $set: {
+                    order: {
+                        total: 0,
+                        drinks: [],
+                    },
+                    empty: true,
+                },
             },
             { new: true }
         );
@@ -32,8 +61,8 @@ router.put("/:id", async (req, res) => {
 //delete Table
 router.delete("/:id", async (req, res) => {
     try {
-        await Table.findByIdAndDelete(req.params.id);
-        res.json("Table has been deleted");
+        const deletedTable = await Table.findByIdAndDelete(req.params.id);
+        res.json(deletedTable);
     } catch (err) {
         res.json(err);
     }
@@ -42,10 +71,10 @@ router.delete("/:id", async (req, res) => {
 //get all Table
 router.get("/", async (req, res) => {
     try {
-        const Table = await Table.find({
+        const storeTables = await Table.find({
             storeId: req.query.storeId,
         });
-        res.json(Table);
+        res.json(storeTables);
     } catch (err) {
         res.json(err);
     }

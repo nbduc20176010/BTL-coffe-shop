@@ -2,6 +2,7 @@ import { Button, Card, Col, Modal, Row, Space } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { triggerOrderMenu } from "../../features/commonSlice";
+import { submitOrder } from "../../features/tableSlice";
 import "./index.css";
 
 const { Meta } = Card;
@@ -9,11 +10,16 @@ const { Meta } = Card;
 const OrderMenu = () => {
     const dispatch = useDispatch();
     const menu = useSelector((state) => state.menu);
+    const currentSelectTable = useSelector(
+        (state) => state.common.currentSelectTable
+    );
     const [order, setOrder] = useState();
     const [reload, setReload] = useState(true);
+    const [currentOrder, setCurrentOrder] = useState({ total: 0, drinks: [] });
     const orderMenuVisible = useSelector(
         (state) => state.common.orderMenuVisible
     );
+
     const hideOrderMenu = () => {
         dispatch(triggerOrderMenu());
         let neworder = menu.drinks.map((item) => ({
@@ -22,11 +28,24 @@ const OrderMenu = () => {
         }));
         setOrder(neworder);
     };
+
     const selectDrink = (drink) => {
+        let orderCounting = currentOrder;
+        orderCounting.total += drink.price;
+        orderCounting.drinks.push({ name: drink.title, price: drink.price });
+        setCurrentOrder(orderCounting);
         let newOrder = order;
-        newOrder.map((item) => item.name === drink.name && item.quantity++);
+        newOrder.map((item) => item.title === drink.title && item.quantity++);
         setOrder(newOrder);
         setReload(!reload);
+    };
+
+    const onSubmit = () => {
+        currentOrder.total !== 0 &&
+            dispatch(
+                submitOrder({ id: currentSelectTable, order: currentOrder })
+            );
+        hideOrderMenu();
     };
 
     useEffect(() => {
@@ -38,6 +57,7 @@ const OrderMenu = () => {
             setOrder(neworder);
         }
     }, [menu.drinks]);
+
     return (
         <>
             {reload}
@@ -51,7 +71,9 @@ const OrderMenu = () => {
                 footer={
                     <>
                         <Space size="middle">
-                            <Button type="primary">Submit</Button>
+                            <Button type="primary" onClick={onSubmit}>
+                                Submit
+                            </Button>
                             <Button>Cancel</Button>
                         </Space>
                     </>
@@ -70,24 +92,23 @@ const OrderMenu = () => {
                     <Row gutter={[8, 8]}>
                         {order &&
                             order.map((item) => (
-                                <Col span={6} key={item.key}>
+                                <Col span={6} key={item.title}>
                                     <Card
                                         hoverable
                                         className="card_container"
+                                        style={{}}
                                         cover={
-                                            <img alt="example" src={item.img} />
+                                            <img
+                                                alt="example"
+                                                style={{ height: "180px" }}
+                                                src={`http://localhost:5000/${item.image.data}`}
+                                            />
                                         }
                                         onClick={() => selectDrink(item)}
                                     >
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                justifyContent: "space-between",
-                                                alignItems: "center",
-                                            }}
-                                        >
+                                        <div>
                                             <Meta
-                                                title={`${item.name}`}
+                                                title={`${item.title}`}
                                                 description={`${item.price}`}
                                             />
                                             <div>

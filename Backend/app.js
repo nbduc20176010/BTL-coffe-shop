@@ -4,7 +4,6 @@ const app = express();
 const mongoose = require("mongoose");
 require("dotenv").config();
 const bodyParser = require("body-parser");
-const userRouter = require("./routers/user");
 const drinkRouter = require("./routers/drink");
 const storeRouter = require("./routers/store");
 const tableRouter = require("./routers/table");
@@ -23,11 +22,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(cors());
-app.use("/api/user", userRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/drink", drinkRouter);
 app.use("/api/store", storeRouter);
-app.use("/api/table", tableRouter)
+app.use("/api/table", tableRouter);
+app.use(express.static("uploads"));
+
 app.listen(process.env.PORT || 5000, () => {
     console.log("app running");
 });

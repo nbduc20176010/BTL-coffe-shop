@@ -5,21 +5,28 @@ const tableSchema = new mongoose.Schema(
         storeId: {
             type: String,
             require: true,
-            ref: 'Store'
+            ref: "Store",
+        },
+        order: {
+            total: Number,
+            drinks: [
+                {
+                    name: String,
+                    price: Number,
+                },
+            ],
         },
         tableNumber: {
             type: Number,
             required: true,
         },
-
         numberOfSit: {
             type: Number,
             required: true,
         },
-
         empty: {
             type: Boolean,
-            required: true,
+            default: false,
         },
     },
     {

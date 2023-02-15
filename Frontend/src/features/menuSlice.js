@@ -1,62 +1,57 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import api from "./api";
 
 const initialState = {
-    drinks: [
-        {
-            key: "drink 1",
-            name: "drink 1",
-            price: 10000,
-            img: "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fill,g_center,w_730,h_913/k%2FPhoto%2FRecipe%20Ramp%20Up%2F2021-12-Mudslide%2FIMG_5520",
-        },
-        {
-            key: "drink 2",
-            name: "drink 2",
-            price: 10000,
-            img: "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fill,g_center,w_730,h_913/k%2FPhoto%2FRecipe%20Ramp%20Up%2F2021-12-Mudslide%2FIMG_5520",
-        },
-        {
-            key: "drink 3",
-            name: "drink 3",
-            price: 10000,
-            img: "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fill,g_center,w_730,h_913/k%2FPhoto%2FRecipe%20Ramp%20Up%2F2021-12-Mudslide%2FIMG_5520",
-        },
-        {
-            key: "drink 4",
-            name: "drink 4",
-            price: 10000,
-            img: "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fill,g_center,w_730,h_913/k%2FPhoto%2FRecipe%20Ramp%20Up%2F2021-12-Mudslide%2FIMG_5520",
-        },
-        {
-            key: "drink 5",
-            name: "drink 5",
-            price: 10000,
-            img: "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fill,g_center,w_730,h_913/k%2FPhoto%2FRecipe%20Ramp%20Up%2F2021-12-Mudslide%2FIMG_5520",
-        },
-        {
-            key: "drink 6",
-            name: "drink 6",
-            price: 10000,
-            img: "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fill,g_center,w_730,h_913/k%2FPhoto%2FRecipe%20Ramp%20Up%2F2021-12-Mudslide%2FIMG_5520",
-        },
-        {
-            key: "drink 7",
-            name: "drink 7",
-            price: 10000,
-            img: "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fill,g_center,w_730,h_913/k%2FPhoto%2FRecipe%20Ramp%20Up%2F2021-12-Mudslide%2FIMG_5520",
-        },
-        {
-            key: "drink 8",
-            name: "drink 8",
-            price: 10000,
-            img: "https://cdn.apartmenttherapy.info/image/upload/f_auto,q_auto:eco,c_fill,g_center,w_730,h_913/k%2FPhoto%2FRecipe%20Ramp%20Up%2F2021-12-Mudslide%2FIMG_5520",
-        },
-    ],
+    drinks: [],
 };
+
+export const getMenu = createAsyncThunk("/menu/getDrinks", async () => {
+    const res = await api.get("/drink");
+    return res.data;
+});
+
+export const editDrink = createAsyncThunk(
+    "/menu/editDrink",
+    async ({ _id, drink }) => {
+        const res = await api.put(`/drink/${_id}`, drink);
+        return res.data;
+    }
+);
+
+export const addDrink = createAsyncThunk("/menu/addDrink", async (drink) => {
+    const res = await api.post("/drink", drink);
+    return res.data;
+});
+
+export const deleteDrink = createAsyncThunk("/menu/deleteDrink", async (id) => {
+    const res = await api.delete(`/drink/${id}`);
+    return res.data;
+});
 
 export const menuSlice = createSlice({
     name: "menu",
     initialState,
-    reducers: {
+    reducers: {},
+    extraReducers: (builder) => {
+        builder.addCase(getMenu.fulfilled, (state, action) => {
+            state.drinks = action.payload;
+        });
+        builder.addCase(editDrink.fulfilled, (state, action) => {
+            const newList = state.drinks.map((item) =>
+                item._id === action.payload._id ? action.payload : item
+            );
+            state.drinks = newList;
+        });
+        builder.addCase(addDrink.fulfilled, (state, action) => {
+            const newList = [...state.drinks, action.payload];
+            state.drinks = newList;
+        });
+        builder.addCase(deleteDrink.fulfilled, (state, action) => {
+            const newList = state.drinks.filter(
+                (item) => item._id !== action.payload._id
+            );
+            state.drinks = newList;
+        });
     },
 });
 

@@ -6,21 +6,27 @@ const storeSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-
+        username: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        password: {
+            type: String,
+            required: true,
+        },
         numberOfTable: {
             type: Number,
             required: true,
         },
-
         open: {
             type: Boolean,
             required: true,
         },
-
         income: {
             type: Number,
             required: true,
-        }
+        },
     },
     {
         timestamps: true,
